@@ -23,6 +23,7 @@ namespace HangManNEW
 
         static string LettersGuessed = string.Empty;
         static string MaskedWord = string.Empty;
+        static string CurrentLetterGuess = string.Empty;
 
 
 
@@ -35,7 +36,7 @@ namespace HangManNEW
             RunGame();
         }
 
-        static void OldTimeyTextPrinter(string inputText, int pauseDuration)
+        static void OldTimeyTextPrinter(string inputText, int pause)
         {
             //loop through each character
             for (int i = 0; i < inputText.Length; i++)
@@ -43,7 +44,7 @@ namespace HangManNEW
                 //get a letter
                 char letter = inputText[i];
                 Console.Write(letter);
-                Thread.Sleep(pauseDuration);
+                Thread.Sleep(pause);
             }
         }
 
@@ -68,7 +69,7 @@ namespace HangManNEW
             Thread.Sleep(PauseDuration * 2);
 
             Console.SetCursorPosition(CursorX / 5, CursorY / 2);
-            OldTimeyTextPrinter("                                    ", 10);
+            OldTimeyTextPrinter("                                                 ", 10);
             Console.SetCursorPosition(CursorX / 5, CursorY / 2);
             OldTimeyTextPrinter("   Have you ever heard of the game  ", 60);
             Thread.Sleep(PauseDuration / 2);
@@ -129,28 +130,32 @@ namespace HangManNEW
                 BuildMaskedWord();
                 PrintRoundInfo();
                 Console.Write("Please enter a letter:");
-                string letterGuess = Console.ReadLine();
-                if (ValidateLetter(letterGuess))
-                {
-                    IsLetterInWord(letterGuess);
-                }
-                //BuildMaskedWord() here a second time b/c of bug i couldn't figure out in time...
-                BuildMaskedWord();
-                if (GuessRemaining == 0 || WordGuessed(WordToGuess, MaskedWord))
+                CurrentLetterGuess = Console.ReadLine();
+                if (CurrentLetterGuess.ToUpper() == WordToGuess.ToUpper())
                 {
                     IsPlaying = false;
                 }
+                if (ValidateLetter(CurrentLetterGuess))
+                {
+                    IsLetterInWord(CurrentLetterGuess);
+                }
+                //BuildMaskedWord() here a second time b/c of bug i couldn't figure out in time...
+                BuildMaskedWord();
+                DidYouWin();
+
             }
-            DidYouWin();
         }
 
         static void DidYouWin()
         {
-            if (WordGuessed(WordToGuess, MaskedWord))
+            if (WordGuessed(WordToGuess, MaskedWord) || (CurrentLetterGuess.ToUpper() == WordToGuess.ToUpper()))
             {
                 YouWon();
             }
-            YouLose();
+            else if (GuessRemaining == 0)
+            {
+                YouLose();
+            }
         }
 
         static bool WordGuessed(string wordToGuess_, string maskedWord_)
@@ -164,9 +169,9 @@ namespace HangManNEW
 
         static bool ValidateLetter(string letter)
         {
-            if (letter.ToUpper() == WordToGuess.ToUpper())
+            if (letter.Length > 1)
             {
-                YouWon();
+                return false;
             }
             else if (letter.Length != 1)
             {
@@ -240,6 +245,7 @@ namespace HangManNEW
 
         static void YouWon()
         {
+            IsPlaying = false;
             Console.Clear();
             Graphic(8);
             Console.WriteLine();
@@ -257,10 +263,12 @@ namespace HangManNEW
             {
                 RunGame();
             }
+            IsPlaying = false;
         }
 
         static void YouLose()
         {
+            IsPlaying = false;
             Console.Clear();
             Graphic(7);
             Console.WriteLine();
@@ -278,6 +286,7 @@ namespace HangManNEW
             {
                 RunGame();
             }
+            IsPlaying = false;
         }
 
         static void Graphic(int switchNumber)
