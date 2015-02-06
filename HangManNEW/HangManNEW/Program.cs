@@ -26,8 +26,6 @@ namespace HangManNEW
         static string CurrentLetterGuess = string.Empty;
 
 
-
-
         static void Main(string[] args)
         {
             Console.SetWindowSize(70, 35);
@@ -139,7 +137,7 @@ namespace HangManNEW
                 {
                     IsLetterInWord(CurrentLetterGuess);
                 }
-                //BuildMaskedWord() here a second time b/c of bug i couldn't figure out in time...
+                //BuildMaskedWord() here a second time b/c of a bug i couldn't figure out in time...ater all letters are guessed (one at a time) you don't immediately win.  need to enter a letter again, then it registers.  will fix later.
                 BuildMaskedWord();
                 DidYouWin();
 
