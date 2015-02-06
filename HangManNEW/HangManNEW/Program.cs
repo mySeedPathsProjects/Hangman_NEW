@@ -29,23 +29,31 @@ namespace HangManNEW
         static void Main(string[] args)
         {
             Console.SetWindowSize(70, 35);
+            //separate out main sections of program for any debugging and to shut parts off during testing
             Greeting();
             IntroAnimation();
             RunGame();
         }
 
+        /// <summary>
+        /// Prints text to screen one char at a time
+        /// </summary>
+        /// <param name="inputText">text you want to print</param>
+        /// <param name="pause">time between each digit printing</param>
         static void OldTimeyTextPrinter(string inputText, int pause)
         {
             //loop through each character
             for (int i = 0; i < inputText.Length; i++)
             {
-                //get a letter
                 char letter = inputText[i];
                 Console.Write(letter);
                 Thread.Sleep(pause);
             }
         }
 
+        /// <summary>
+        /// Prints to screen welcome text.  Asks for name input
+        /// </summary>
         static void Greeting()
         {
             Console.CursorVisible = false;
@@ -54,26 +62,29 @@ namespace HangManNEW
             Thread.Sleep(PauseDuration);
             Console.SetCursorPosition(CursorX / 5, CursorY / 2);
             OldTimeyTextPrinter("Hey kid.  ", 50);
-            Thread.Sleep(PauseDuration * 2);
+            Thread.Sleep(PauseDuration);
             OldTimeyTextPrinter("So what's your name? ", 30);
             name = Console.ReadLine();
             Thread.Sleep(PauseDuration);
 
             Console.SetCursorPosition(CursorX / 5, CursorY / 2);
-            OldTimeyTextPrinter("        Cool                  ", 50);
+            OldTimeyTextPrinter("        Cool                  ", 30);
             Thread.Sleep(PauseDuration / 4);
             Console.SetCursorPosition((CursorX / 5) + 12, CursorY / 2);
-            OldTimeyTextPrinter("  nice to meet you", 50);
+            OldTimeyTextPrinter("  nice to meet you", 40);
             Thread.Sleep(PauseDuration * 2);
 
             Console.SetCursorPosition(CursorX / 5, CursorY / 2);
             OldTimeyTextPrinter("                                                 ", 10);
             Console.SetCursorPosition(CursorX / 5, CursorY / 2);
-            OldTimeyTextPrinter("   Have you ever heard of the game  ", 60);
+            OldTimeyTextPrinter("   Have you ever heard of the game  ", 50);
             Thread.Sleep(PauseDuration / 2);
             OldTimeyTextPrinter(".  .  .  ", 200);
         }
-       
+
+       /// <summary>
+       /// intro animation and instructions for game
+       /// </summary>
         static void IntroAnimation()
         {
             Console.CursorVisible = false;
@@ -91,7 +102,7 @@ namespace HangManNEW
  ░  ░  ░      ░  ░         ░       ░    ░ ░            ░  ░        
                                         ░                          
             ";
-            OldTimeyTextPrinter(cat, 3);
+            OldTimeyTextPrinter(cat, 2);
             Thread.Sleep(PauseDuration);
             Console.WriteLine();
             Console.WriteLine();
@@ -108,42 +119,54 @@ namespace HangManNEW
             Thread.Sleep(PauseDuration * 3);
         }
 
-
+        /// <summary>
+        /// main function that actually runs game within a while loop
+        /// </summary>
         static void RunGame()
         {
+            //initialize variable and clear them when game is restarted
             WordToGuess = wordBank[rng.Next(wordBank.Count)].ToUpper();
             GuessRemaining = GuessesGiven;
             LettersGuessed = string.Empty;
             IsPlaying = true;
 
+            //game plays until condition is set to false
             while (IsPlaying)
             {
                 Console.Clear();
 
          //**** FOR TESTING ****
-                Console.WriteLine(WordToGuess);
+                //Console.WriteLine(WordToGuess);
                 //Console.WriteLine();
          //**** FOR TESTING ****
 
+                //construct the word as it's being guessed and print current game into to screen
                 BuildMaskedWord();
                 PrintRoundInfo();
+                //ask user for a letter
                 Console.Write("Please enter a letter:");
                 CurrentLetterGuess = Console.ReadLine();
+                //if they enter an entire word to guess check it first ****(can maybe put into ValidateLetter function)****
                 if (CurrentLetterGuess.ToUpper() == WordToGuess.ToUpper())
                 {
                     IsPlaying = false;
                 }
+                //if input is valid check to see if letter is in the word to guess
                 if (ValidateLetter(CurrentLetterGuess))
                 {
                     IsLetterInWord(CurrentLetterGuess);
                 }
-                //BuildMaskedWord() here a second time b/c of a bug i couldn't figure out in time...ater all letters are guessed (one at a time) you don't immediately win.  need to enter a letter again, then it registers.  will fix later.
+                //***BuildMaskedWord() here a second time b/c of a bug i couldn't figure out in time...ater all letters are guessed (one at a time) you don't immediately win.  need to enter a letter again, then it registers.  will fix later.
                 BuildMaskedWord();
+                //check to see if word has been guessed or if user has run out of chances
                 DidYouWin();
 
             }
         }
 
+        /// <summary>
+        /// check to see if user has guessed all letter (or word all at once), or if user has run out of guesses
+        /// </summary>
         static void DidYouWin()
         {
             if (WordGuessed(WordToGuess, MaskedWord) || (CurrentLetterGuess.ToUpper() == WordToGuess.ToUpper()))
@@ -156,6 +179,12 @@ namespace HangManNEW
             }
         }
 
+        /// <summary>
+        /// check if user has guessed all letters in the word
+        /// </summary>
+        /// <param name="wordToGuess_">randomly chosen word</param>
+        /// <param name="maskedWord_">word created by correct user input</param>
+        /// <returns></returns>
         static bool WordGuessed(string wordToGuess_, string maskedWord_)
         {
             if (wordToGuess_.ToUpper() == maskedWord_.ToUpper().Replace(" ", string.Empty))
@@ -165,6 +194,11 @@ namespace HangManNEW
             return false;
         }
 
+        /// <summary>
+        /// verify if input is valid (only 1 letter, input not tried yet, is a letter character)
+        /// </summary>
+        /// <param name="letter">user's input</param>
+        /// <returns>true if valid</returns>
         static bool ValidateLetter(string letter)
         {
             if (letter.Length > 1)
@@ -175,14 +209,14 @@ namespace HangManNEW
             {
                 Console.WriteLine();
                 OldTimeyTextPrinter("INVALID INPUT...ENTER A SINGLE LETTER", 20);
-                Thread.Sleep(PauseDuration*2);
+                Thread.Sleep(PauseDuration);
                 return false;
             }
             else if (LettersGuessed.ToUpper().Contains(letter.ToUpper()))
             {
                 Console.WriteLine();
                 OldTimeyTextPrinter("YOU ALREADY TRIED THIS LETTER", 20);
-                Thread.Sleep(PauseDuration*2);
+                Thread.Sleep(PauseDuration);
                 return false;
             }
             else if (char.IsLetter(letter[0]))
@@ -192,6 +226,10 @@ namespace HangManNEW
             return false;
         }
 
+        /// <summary>
+        /// check to see if letter chosen is contained in word they are guessing, add to string of guessed letters, decrease guess counter if letter not in word
+        /// </summary>
+        /// <param name="letter">user's input</param>
         static void IsLetterInWord(string letter)
         {
             if (WordToGuess.Contains(letter.ToUpper()))
@@ -212,6 +250,9 @@ namespace HangManNEW
 
         }
 
+        /// <summary>
+        /// build word they are trying to guess based on string of letters guessed so far, use dashes when needed letter has not been chosen yet
+        /// </summary>
         static void BuildMaskedWord()
         {
             MaskedWord = string.Empty;
@@ -228,6 +269,9 @@ namespace HangManNEW
             }
         }
 
+        /// <summary>
+        /// print current round info (word with dashes, guesses remaining, and letters guessed so far)
+        /// </summary>
         static void PrintRoundInfo()
         {
             Graphic(GuessesGiven - GuessRemaining);
@@ -241,6 +285,9 @@ namespace HangManNEW
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// print graphic and text if user guesses word, ask if they want to play again
+        /// </summary>
         static void YouWon()
         {
             IsPlaying = false;
@@ -264,6 +311,9 @@ namespace HangManNEW
             IsPlaying = false;
         }
 
+        /// <summary>
+        /// print graphic and text if user runs out of guesses, ask if they want to play again
+        /// </summary>
         static void YouLose()
         {
             IsPlaying = false;
@@ -287,6 +337,10 @@ namespace HangManNEW
             IsPlaying = false;
         }
 
+        /// <summary>
+        /// contains all graphics used in game, each called by number
+        /// </summary>
+        /// <param name="switchNumber">number of graphic needed</param>
         static void Graphic(int switchNumber)
         {
             switch (switchNumber)
