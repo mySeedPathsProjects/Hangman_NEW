@@ -1,1 +1,6 @@
 C:\Users\nstephens\Documents\GitHub\Hangman_NEW\HangManNEW\HangManNEW\bin\Debug\HangManNEW.exe.config
+C:\Users\nstephens\Documents\GitHub\Hangman_NEW\HangManNEW\HangManNEW\bin\Debug\HangManNEW.exe
+C:\Users\nstephens\Documents\GitHub\Hangman_NEW\HangManNEW\HangManNEW\bin\Debug\HangManNEW.pdb
+C:\Users\nstephens\Documents\GitHub\Hangman_NEW\HangManNEW\HangManNEW\obj\Debug\HangManNEW.csprojResolveAssemblyReference.cache
+C:\Users\nstephens\Documents\GitHub\Hangman_NEW\HangManNEW\HangManNEW\obj\Debug\HangManNEW.exe
+C:\Users\nstephens\Documents\GitHub\Hangman_NEW\HangManNEW\HangManNEW\obj\Debug\HangManNEW.pdb
