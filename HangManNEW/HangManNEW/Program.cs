@@ -223,7 +223,10 @@ namespace HangManNEW
             {
                 return true;
             }
-            return false;
+            else
+            {
+                return false;
+            }
         }
 
         /// <summary>
